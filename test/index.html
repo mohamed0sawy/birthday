@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Mariam</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- Section 1: Welcome Screen -->
+<section id="welcome" class="section">
+    <div class="welcome-content">
+        <h1 class="birthday-title">Happy Birthday, Mariam 🎉</h1>
+        <button id="startBtn" class="start-button">Start 🎂</button>
+        <p class="volume-notice">Please turn your phone volume up 🔊</p>
+    </div>
+</section>
+
+<!-- Section 2: Journey Start -->
+<section id="journey-start" class="section hidden">
+    <div class="journey-content">
+        <p class="scroll-message">Scroll down slowly and enjoy the journey ✨</p>
+    </div>
+</section>
+
+<!-- Section 3: Memory Card Game -->
+<section id="game-section" class="section hidden">
+    <div class="game-container">
+        <h2 class="game-title">Match the Cards 🎴</h2>
+        <div id="game-board" class="game-board"></div>
+        <div id="completion-message" class="completion-message hidden">
+            <h2>Happy Birthday, DR. Mariam 🎉</h2>
+        </div>
+    </div>
+</section>
+
+<!-- Section 4: Scroll Journey Messages -->
+<section id="scroll-journey" class="section hidden">
+    <div class="arrow-container">
+        <svg class="scroll-arrow" viewBox="0 0 100 800" preserveAspectRatio="none">
+            <path id="arrowPath" d="M 50 0 L 50 700 L 35 685 M 50 700 L 65 685"
+                  stroke="currentColor" stroke-width="3" fill="none"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
+    <div class="messages-container">
+        <p class="scroll-phrase" data-index="0">Today is about celebrating you 🎉</p>
+        <p class="scroll-phrase" data-index="1">Wishing you a year full of great moments ✨</p>
+        <p class="scroll-phrase" data-index="2">May this year bring success and happiness 🌟</p>
+        <p class="scroll-phrase" data-index="3">Here's to new achievements and joy 🎊</p>
+        <p class="scroll-phrase" data-index="4">May every day be filled with positivity ☀️</p>
+        <p class="scroll-phrase" data-index="5">Almost there 🙂</p>
+    </div>
+</section>
+
+<!-- Section 5: Video Surprise -->
+<section id="video-section" class="section hidden">
+    <div class="video-container">
+        <video id="birthday-video" controls playsinline>
+            <source src="video/birthday.mp4" type="video/mp4">
+        </video>
+    </div>
+</section>
+
+<!-- Final Section: Closing Message -->
+<section id="closing" class="section hidden">
+    <div class="closing-content">
+        <p class="closing-message">
+            Wishing you a year full of success, happiness, and great moments.
+        </p>
+    </div>
+</section>
+
+<!-- Audio Elements -->
+<audio id="song1" preload="auto">
+    <source src="audio/song1.mp3" type="audio/mpeg">
+</audio>
+<audio id="song2" loop preload="auto">
+    <source src="audio/song2.mp3" type="audio/mpeg">
+</audio>
+
+<script src="script.js"></script>
+</body>
+</html>

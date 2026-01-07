@@ -1,10 +1,13 @@
 /* --- Variables & Reset --- */
 :root {
-    --bg-color: #fdfbf7; /* Elegant Cream */
-    --text-color: #333333; /* Soft Charcoal */
-    --accent-color: #d4af37; /* Elegant Gold */
-    --font-heading: 'Playfair Display', serif;
-    --font-body: 'Georgia', 'Times New Roman', serif;
+    /* New Palette */
+    --text-color: #3d3024;       /* Deep warm brown */
+    --accent-color: #8c7b6c;     /* Muted classy brown for buttons/accents */
+    --card-bg: #ffffff;          /* White for cards to pop against gradient */
+
+    /* New Fonts */
+    --font-heading: 'Georgia', 'Times New Roman', serif;
+    --font-body: 'Georgia', serif;
 }
 
 * {
@@ -18,7 +21,13 @@ html {
 }
 
 body {
-    background-color: var(--bg-color);
+    /* New Background */
+    background: linear-gradient(135deg, #f5f0e8 0%, #e8dcc8 100%);
+
+    /* Ensure gradient stays fixed while scrolling for a premium feel */
+    background-attachment: fixed;
+    min-height: 100vh;
+
     color: var(--text-color);
     font-family: var(--font-body);
     overflow-x: hidden;
@@ -33,6 +42,8 @@ body {
 h1, h2, h3 {
     font-family: var(--font-heading);
     color: var(--accent-color);
+    font-weight: 300;
+    letter-spacing: 2px;
 }
 
 /* --- Section 1: Welcome --- */
@@ -57,18 +68,7 @@ h1, h2, h3 {
     margin-bottom: 30px;
 }
 
-#start-btn {
-    padding: 15px 40px;
-    font-size: 1.2rem;
-    background-color: var(--accent-color);
-    color: white;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    font-family: var(--font-heading);
-    transition: transform 0.2s;
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-}
+
 
 #start-btn:active {
     transform: scale(0.95);
@@ -111,29 +111,28 @@ h1, h2, h3 {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
-    max-width: 350px;
+    max-width: 400px;
     width: 100%;
 }
 
+
+
 .card {
-    aspect-ratio: 1; /* Makes it a square */
-    background-color: #fff;
-    border: 2px solid var(--accent-color);
-    border-radius: 8px;
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, #d4c4ab 0%, #bfac8f 100%);
+    /* border: 1px groove #dcd5b0; */
+    border-radius: 4px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 1.5rem;
     cursor: pointer;
-    perspective: 1000px;
-    position: relative;
-    transition: transform 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .card.flipped, .card.matched {
-    background-color: var(--accent-color);
-    color: white;
-    transform: rotateY(180deg);
+    background: #b27d4df2;
+    color: #f5f0e8;
 }
 
 .card-content {
@@ -151,7 +150,7 @@ h1, h2, h3 {
 }
 
 #game-message h3 {
-    font-size: 2rem;
+    font-size: 2.5rem;
     color: var(--text-color);
 }
 
@@ -272,21 +271,11 @@ video {
     text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
 }
 
-#continue-btn {
-    padding: 12px 30px;
-    font-size: 1.1rem;
-    background: transparent;
-    border: 2px solid var(--accent-color);
-    color: var(--accent-color);
-    border-radius: 25px;
-    cursor: pointer;
-    font-family: var(--font-heading);
-    transition: all 0.3s ease;
-}
+
 
 #continue-btn:hover {
-    background-color: var(--accent-color);
-    color: white;
+    background-color: transparent;
+    color: var(--text-color);
 }
 
 /* Pop Up Animation Keyframes */
@@ -298,4 +287,28 @@ video {
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
+}
+
+#start-btn, #continue-btn {
+    padding: 15px 40px;
+    font-size: 1.3rem;
+    background: linear-gradient(135deg, #c9a96e 0%, #a88b5f 100%);
+    border: none;
+    box-shadow: 0 8px 20px rgba(139, 111, 71, 0.3);
+    color: #f5f0e8;
+    border-radius: 30px;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    transition: all 0.3s ease;
+}
+
+#snake-path {
+    stroke: var(--text-color); /* Matches your new text color */
+    stroke-width: 2;
+    fill: none;
+    opacity: 0.2; /* Makes it look like a subtle watermark path */
+}
+
+#arrow-head {
+    fill: var(--text-color);
 }

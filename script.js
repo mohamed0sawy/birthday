@@ -18,18 +18,19 @@ document.addEventListener('DOMContentLoaded', () => {
     song2.loop = true;
     let musicStarted = false;
 
+
+    // Play Music
+    if (!musicStarted) {
+        song1.play().catch(e => console.log("Audio play failed:", e));
+//        musicStarted = true;
+    }
+    // Chain songs
+    song1.onended = () => {
+        song2.play();
+    };
+
     // --- 1. Start Journey ---
     startBtn.addEventListener('click', () => {
-        // Play Music
-        if (!musicStarted) {
-            song1.play().catch(e => console.log("Audio play failed:", e));
-            musicStarted = true;
-            
-            // Chain songs
-            song1.onended = () => {
-                song2.play();
-            };
-        }
 
         // UI Transition
         welcomeSection.style.display = 'none'; // Remove hero
@@ -109,28 +110,50 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // REPLACE your existing gameWon function with this:
+
+//    function gameWon() {
+//        // Show the big popup
+//        const popup = document.getElementById('game-message');
+//        popup.classList.remove('hidden');
+//
+//        launchConfetti();
+//
+//        // Reveal the scroll section behind the scenes
+//        journeySection.classList.remove('hidden');
+//
+//        // Handle the "Continue" button click
+//        document.getElementById('continue-btn').onclick = function() {
+//            // Fade out popup
+//            popup.style.opacity = '0';
+//            popup.style.transition = 'opacity 0.5s';
+//
+//            setTimeout(() => {
+//                popup.classList.add('hidden'); // Remove it completely after fade
+//                // Optional: Smooth scroll to the journey start
+//                journeySection.scrollIntoView({ behavior: 'smooth' });
+//            }, 500);
+//        };
+//    }
 
     function gameWon() {
-        // Show the big popup
+        // 1. Show the Big Celebration Popup
         const popup = document.getElementById('game-message');
         popup.classList.remove('hidden');
-
         launchConfetti();
 
-        // Reveal the scroll section behind the scenes
-        journeySection.classList.remove('hidden');
+        // 2. UNLOCK the rest of the page
+        // We remove 'hidden' from Journey, Video, and Closing sections
+        document.getElementById('scroll-journey').classList.remove('hidden');
+        document.getElementById('video-section').classList.remove('hidden');
+        document.getElementById('closing-section').classList.remove('hidden');
 
-        // Handle the "Continue" button click
+        // 3. Handle "Continue" click
         document.getElementById('continue-btn').onclick = function() {
-            // Fade out popup
             popup.style.opacity = '0';
-            popup.style.transition = 'opacity 0.5s';
-
             setTimeout(() => {
-                popup.classList.add('hidden'); // Remove it completely after fade
-                // Optional: Smooth scroll to the journey start
-                journeySection.scrollIntoView({ behavior: 'smooth' });
+                popup.classList.add('hidden');
+                // Scroll to the start of the journey
+                document.getElementById('scroll-journey').scrollIntoView({ behavior: 'smooth' });
             }, 500);
         };
     }
@@ -232,6 +255,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Stop confetti after 5 seconds to save battery
         setTimeout(() => {
             canvas.style.display = 'none';
-        }, 5000);
+        }, 9000);
     }
 });
