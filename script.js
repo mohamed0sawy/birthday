@@ -18,19 +18,21 @@ document.addEventListener('DOMContentLoaded', () => {
     song2.loop = true;
     let musicStarted = false;
 
-
-    // Play Music
-    if (!musicStarted) {
-        song1.play().catch(e => console.log("Audio play failed:", e));
-//        musicStarted = true;
-    }
-    // Chain songs
-    song1.onended = () => {
-        song2.play();
-    };
-
     // --- 1. Start Journey ---
     startBtn.addEventListener('click', () => {
+
+        song1.play()
+                .then(() => {
+                    console.log("Playback started successfully");
+                })
+                .catch(e => {
+                    console.log("Playback blocked or failed:", e);
+                });
+
+            // Chain the second song
+            song1.onended = () => {
+                song2.play();
+            };
 
         // UI Transition
         welcomeSection.style.display = 'none'; // Remove hero
