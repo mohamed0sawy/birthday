@@ -1,0 +1,301 @@
+/* --- Variables & Reset --- */
+:root {
+    --bg-color: #fdfbf7; /* Elegant Cream */
+    --text-color: #333333; /* Soft Charcoal */
+    --accent-color: #d4af37; /* Elegant Gold */
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Georgia', 'Times New Roman', serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    text-align: center;
+}
+
+/* --- Utilities --- */
+.hidden {
+    display: none !important;
+}
+
+h1, h2, h3 {
+    font-family: var(--font-heading);
+    color: var(--accent-color);
+}
+
+/* --- Section 1: Welcome --- */
+#welcome-section {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.title {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.volume-note {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    margin-bottom: 30px;
+}
+
+#start-btn {
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    transition: transform 0.2s;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+#start-btn:active {
+    transform: scale(0.95);
+}
+
+/* --- Section 2: Transition --- */
+#transition-message {
+    padding: 50px 20px;
+    font-size: 1.2rem;
+    min-height: 20vh;
+}
+
+.scroll-indicator {
+    margin-top: 10px;
+    font-size: 2rem;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-10px);}
+    60% {transform: translateY(-5px);}
+}
+
+/* --- Section 3: Game --- */
+#game-section {
+    padding: 40px 20px;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.section-title {
+    margin-bottom: 30px;
+    font-size: 2rem;
+}
+
+.game-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    max-width: 350px;
+    width: 100%;
+}
+
+.card {
+    aspect-ratio: 1; /* Makes it a square */
+    background-color: #fff;
+    border: 2px solid var(--accent-color);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    perspective: 1000px;
+    position: relative;
+    transition: transform 0.3s;
+}
+
+.card.flipped, .card.matched {
+    background-color: var(--accent-color);
+    color: white;
+    transform: rotateY(180deg);
+}
+
+.card-content {
+    display: none;
+}
+
+.card.flipped .card-content, .card.matched .card-content {
+    display: block;
+    transform: rotateY(180deg); /* Text needs to be readable */
+}
+
+#game-message {
+    margin-top: 30px;
+    animation: fadeIn 1s ease-in;
+}
+
+#game-message h3 {
+    font-size: 2rem;
+    color: var(--text-color);
+}
+
+/* --- Section 4: Scroll Journey (Snake) --- */
+#scroll-journey {
+    position: relative;
+    height: 1500px; /* Long section for scrolling */
+    overflow: hidden;
+    margin-top: 50px;
+}
+
+.snake-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+#snake-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.journey-text {
+    position: absolute;
+    width: 80%;
+    left: 10%;
+    text-align: center;
+    font-size: 1.5rem;
+    background-color: var(--bg-color); /* Mask the line behind text */
+    padding: 10px;
+    opacity: 0; /* Hidden initially */
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    z-index: 1;
+    font-family: var(--font-heading);
+    color: var(--text-color);
+}
+
+.journey-text.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- Section 5: Video --- */
+#video-section {
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.video-wrapper {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+video {
+    width: 100%;
+    display: block;
+}
+
+/* --- Closing --- */
+#closing-section {
+    padding: 50px 20px 100px;
+    background-color: var(--bg-color);
+}
+
+.signature {
+    margin-top: 20px;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+/* --- Confetti Canvas --- */
+#confetti-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999;
+}
+
+/* --- New Celebration Popup Styles --- */
+.celebration-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(253, 251, 247, 0.95); /* High opacity background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100; /* Below confetti (999) but above everything else */
+    animation: fadeIn 0.5s ease;
+}
+
+.celebration-content {
+    text-align: center;
+    animation: popUp 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Bouncy effect */
+    padding: 20px;
+}
+
+.celebration-content h3 {
+    font-size: 3.5rem; /* Much bigger */
+    color: var(--accent-color);
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+}
+
+#continue-btn {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    background: transparent;
+    border: 2px solid var(--accent-color);
+    color: var(--accent-color);
+    border-radius: 25px;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    transition: all 0.3s ease;
+}
+
+#continue-btn:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+/* Pop Up Animation Keyframes */
+@keyframes popUp {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
