@@ -18,32 +18,49 @@
 </section>
 
 <section id="transition-message" class="hidden">
-    <p style="font-size: large;color: var(--accent-color);">Scroll down slowly and enjoy the journey ✨</p>
+    <p style="font-size: large; color: var(--accent-color);">Scroll down slowly and enjoy the journey ✨</p>
     <div class="scroll-indicator">⬇</div>
 </section>
 
 <section id="game-section">
-    <h2 class="section-title">A Little Game</h2>
+    <h2 class="section-title">First, A Little Memory Game</h2>
     <div class="game-container" id="game-grid">
     </div>
-    <div id="game-message" class="celebration-overlay hidden">
-        <div class="celebration-content">
-            <h3>
-                Happy Birthday,<br>DR. Mariam 🎉<br><br>
-                وعقبال <span style="color:red"> 100 </span> سنة
-            </h3>
-            <button id="continue-btn">Continue the Journey ⬇</button>
+</section>
+
+<section id="puzzle-section" class="hidden">
+    <h2 class="section-title">Let's put the pieces together...</h2>
+    <p class="instruction">Tap a piece to select it, then tap <b>any</b> other spot to swap them.</p>
+
+    <div class="puzzle-board" id="puzzle-target">
+    </div>
+
+    <div class="puzzle-bank" id="puzzle-source">
+    </div>
+</section>
+
+<section id="candle-section" class="hidden">
+    <h2 class="section-title">Make a Wish ✨</h2>
+    <p class="instruction">Close your eyes, wish for something beautiful, then tap the cake.</p>
+
+    <div class="cake-container" id="cake-trigger">
+        <div class="cake">
+            <div class="icing"></div>
+            <div class="candles">
+                <div class="candle c1"><div class="flame"></div><div class="wick"></div><div class="smoke"></div></div>
+                <div class="candle c2"><div class="flame"></div><div class="wick"></div><div class="smoke"></div></div>
+                <div class="candle c3"><div class="flame"></div><div class="wick"></div><div class="smoke"></div></div>
+            </div>
         </div>
+        <div class="plate"></div>
     </div>
 </section>
 
 <section id="scroll-journey" class="hidden">
-
     <div class="snake-container">
         <svg id="snake-svg" viewBox="0 0 100 800" preserveAspectRatio="none">
             <path id="snake-path" d="M50,0 C20,100 80,200 50,300 C20,400 80,500 50,600 C20,700 50,750 50,800"
                   stroke="#d4af37" stroke-width="2" fill="none" />
-            <polygon id="arrow-head" points="0,0 10,0 5,10" fill="#d4af37" style="display:none;"/>
         </svg>
     </div>
 
@@ -67,8 +84,17 @@
     <p class="signature">Best Wishes.</p>
 </section>
 
-<canvas id="confetti-canvas"></canvas>
+<div id="game-message" class="celebration-overlay hidden">
+    <div class="celebration-content">
+        <h3>
+            Happy Birthday,<br>DR. Mariam 🎉<br><br>
+            وعقبال <span style="color:red"> 100 </span> سنة
+        </h3>
+        <button id="continue-btn">Continue the Journey ⬇</button>
+    </div>
+</div>
 
+<canvas id="confetti-canvas"></canvas>
 <script src="script.js"></script>
 </body>
 </html>

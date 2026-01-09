@@ -4,219 +4,257 @@ document.addEventListener('DOMContentLoaded', () => {
     const startBtn = document.getElementById('start-btn');
     const welcomeSection = document.getElementById('welcome-section');
     const transitionMsg = document.getElementById('transition-message');
-    const gameSection = document.getElementById('game-section'); // Initially hidden logic handled via scroll
-    const gameGrid = document.getElementById('game-grid');
-    const snakePath = document.getElementById('snake-path');
-    const journeySection = document.getElementById('scroll-journey');
-    const journeyTexts = document.querySelectorAll('.journey-text');
-    const videoSection = document.getElementById('video-section');
-    const birthdayVideo = document.getElementById('birthday-video');
 
-    // --- Audio Setup ---
+    // Audio
     const song1 = new Audio('audio/song1.mp3');
     const song2 = new Audio('audio/song2.mp3');
     song2.loop = true;
-    let musicStarted = false;
 
-    // --- 1. Start Journey ---
+    // --- 1. START JOURNEY ---
     startBtn.addEventListener('click', () => {
+        song1.play().catch(e => console.log("Audio blocked:", e));
+        song1.onended = () => song2.play();
 
-        song1.play()
-                .then(() => {
-                    console.log("Playback started successfully");
-                })
-                .catch(e => {
-                    console.log("Playback blocked or failed:", e);
-                });
-
-            // Chain the second song
-            song1.onended = () => {
-                song2.play();
-            };
-
-        // UI Transition
-        welcomeSection.style.display = 'none'; // Remove hero
+        welcomeSection.style.display = 'none';
         transitionMsg.classList.remove('hidden');
-        
-        // Scroll slightly to indicate movement
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        
-        // Init Game
-        initGame();
+
+        initCardGame(); // Start first game
     });
 
-    // --- 2. Memory Game Logic ---
+    // ==========================================
+    // GAME 1: MEMORY CARDS
+    // ==========================================
+    const gameGrid = document.getElementById('game-grid');
     const icons = ['🎂', '🎁', '🎈', '✨', '🕯️', '🎉', '🎩', '🍰'];
-    let cardsArray = [...icons, ...icons]; // Duplicate for pairs
+    let cardsArray = [...icons, ...icons];
     let flippedCards = [];
     let matchedPairs = 0;
-    let lockBoard = false;
 
-    function initGame() {
-        // Shuffle
+    function initCardGame() {
         cardsArray.sort(() => 0.5 - Math.random());
-        
-        // Create Grid
         gameGrid.innerHTML = '';
         cardsArray.forEach((icon) => {
             const card = document.createElement('div');
             card.classList.add('card');
-            // Initially show content for 3 seconds
             card.innerHTML = `<span class="card-content">${icon}</span>`;
-            card.classList.add('flipped'); 
-            
+            card.classList.add('flipped');
             card.addEventListener('click', () => flipCard(card, icon));
             gameGrid.appendChild(card);
         });
 
-        // Hide cards after 3 seconds
         setTimeout(() => {
-            document.querySelectorAll('.card').forEach(c => {
-                c.classList.remove('flipped');
-            });
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('flipped'));
         }, 3000);
     }
 
     function flipCard(card, icon) {
-        if (lockBoard || card.classList.contains('flipped') || card.classList.contains('matched')) return;
-
+        if (card.classList.contains('flipped') || card.classList.contains('matched')) return;
         card.classList.add('flipped');
         flippedCards.push({ card, icon });
 
         if (flippedCards.length === 2) {
-            checkForMatch();
-        }
-    }
-
-    function checkForMatch() {
-        lockBoard = true;
-        const [first, second] = flippedCards;
-
-        if (first.icon === second.icon) {
-            first.card.classList.add('matched');
-            second.card.classList.add('matched');
-            matchedPairs++;
-            flippedCards = [];
-            lockBoard = false;
-
-            if (matchedPairs === icons.length) {
-                gameWon();
-            }
-        } else {
-            setTimeout(() => {
-                first.card.classList.remove('flipped');
-                second.card.classList.remove('flipped');
+            const [first, second] = flippedCards;
+            if (first.icon === second.icon) {
+                first.card.classList.add('matched');
+                second.card.classList.add('matched');
+                matchedPairs++;
                 flippedCards = [];
-                lockBoard = false;
-            }, 1000);
+                if (matchedPairs === icons.length) cardGameWon();
+            } else {
+                setTimeout(() => {
+                    first.card.classList.remove('flipped');
+                    second.card.classList.remove('flipped');
+                    flippedCards = [];
+                }, 1000);
+            }
         }
     }
 
+    function cardGameWon() {
+        // Small confetti for small win
+        launchConfetti(50); // 50 particles
 
-//    function gameWon() {
-//        // Show the big popup
-//        const popup = document.getElementById('game-message');
-//        popup.classList.remove('hidden');
-//
-//        launchConfetti();
-//
-//        // Reveal the scroll section behind the scenes
-//        journeySection.classList.remove('hidden');
-//
-//        // Handle the "Continue" button click
-//        document.getElementById('continue-btn').onclick = function() {
-//            // Fade out popup
-//            popup.style.opacity = '0';
-//            popup.style.transition = 'opacity 0.5s';
-//
-//            setTimeout(() => {
-//                popup.classList.add('hidden'); // Remove it completely after fade
-//                // Optional: Smooth scroll to the journey start
-//                journeySection.scrollIntoView({ behavior: 'smooth' });
-//            }, 500);
-//        };
-//    }
+        // Unlock Next Section
+        const puzzleSection = document.getElementById('puzzle-section');
+        puzzleSection.classList.remove('hidden');
 
-    function gameWon() {
-        // 1. Show the Big Celebration Popup
-        const popup = document.getElementById('game-message');
-        popup.classList.remove('hidden');
-        launchConfetti();
-
-        // 2. UNLOCK the rest of the page
-        // We remove 'hidden' from Journey, Video, and Closing sections
-        document.getElementById('scroll-journey').classList.remove('hidden');
-        document.getElementById('video-section').classList.remove('hidden');
-        document.getElementById('closing-section').classList.remove('hidden');
-
-        // 3. Handle "Continue" click
-        document.getElementById('continue-btn').onclick = function() {
-            popup.style.opacity = '0';
-            setTimeout(() => {
-                popup.classList.add('hidden');
-                // Scroll to the start of the journey
-                document.getElementById('scroll-journey').scrollIntoView({ behavior: 'smooth' });
-            }, 500);
-        };
+        setTimeout(() => {
+            puzzleSection.scrollIntoView({ behavior: 'smooth' });
+            initPuzzleGame(); // Initialize the puzzle now
+        }, 1500);
     }
 
-    // --- 3. Snake Scroll Animation ---
-    // Get total length of the path
+    // ==========================================
+    // GAME 2: PUZZLE (Smart Swap Logic)
+    // ==========================================
+    let selectedPiece = null; // The DOM element currently selected
+
+    function initPuzzleGame() {
+        const puzzleBank = document.getElementById('puzzle-source');
+        const puzzleTarget = document.getElementById('puzzle-target');
+
+        // 1. Create 9 Empty Slots
+        puzzleTarget.innerHTML = '';
+        for(let i=0; i<9; i++) {
+            const slot = document.createElement('div');
+            slot.classList.add('puzzle-slot');
+            slot.dataset.slotIndex = i;
+            // Clicking a slot handles moving/swapping
+            slot.addEventListener('click', () => handleSlotClick(slot));
+            puzzleTarget.appendChild(slot);
+        }
+
+        // 2. Create 9 Pieces
+        puzzleBank.innerHTML = '';
+        let pieceIndices = [0,1,2,3,4,5,6,7,8];
+        pieceIndices.sort(() => 0.5 - Math.random()); // Shuffle
+
+        pieceIndices.forEach(index => {
+            const piece = document.createElement('div');
+            piece.classList.add('puzzle-piece');
+            piece.dataset.id = index; // Correct position ID
+
+            // Visuals
+            const row = Math.floor(index / 3);
+            const col = index % 3;
+            piece.style.backgroundPosition = `-${col * 100}px -${row * 100}px`;
+
+            // Clicking a piece selects it
+            piece.addEventListener('click', (e) => handlePieceClick(e, piece));
+            puzzleBank.appendChild(piece);
+        });
+    }
+
+    function handlePieceClick(e, piece) {
+        e.stopPropagation(); // Don't trigger slot click if piece is inside slot
+
+        // If we already have a selected piece, and we click a DIFFERENT piece
+        if (selectedPiece && selectedPiece !== piece) {
+            // Swap the two pieces (whether in bank or board)
+            swapPieces(selectedPiece, piece);
+            deselectAll();
+            checkPuzzleWin();
+            return;
+        }
+
+        // Toggle Selection
+        if (piece.classList.contains('selected')) {
+            deselectAll();
+        } else {
+            deselectAll();
+            piece.classList.add('selected');
+            selectedPiece = piece;
+        }
+    }
+
+    function handleSlotClick(slot) {
+        // Only act if we have a selected piece
+        if (!selectedPiece) return;
+
+        // Case 1: Slot is empty -> Move piece there
+        if (slot.children.length === 0) {
+            slot.appendChild(selectedPiece);
+            deselectAll();
+            checkPuzzleWin();
+        }
+        // Case 2: Slot has a piece -> Swap selected with slot's piece
+        else {
+            const pieceInSlot = slot.children[0];
+            swapPieces(selectedPiece, pieceInSlot);
+            deselectAll();
+            checkPuzzleWin();
+        }
+    }
+
+    function swapPieces(piece1, piece2) {
+        const parent1 = piece1.parentNode;
+        const sibling1 = piece1.nextSibling === piece2 ? piece1 : piece1.nextSibling;
+
+        // Swap logic for DOM nodes
+        piece2.parentNode.insertBefore(piece1, piece2);
+        parent1.insertBefore(piece2, sibling1);
+    }
+
+    function deselectAll() {
+        document.querySelectorAll('.puzzle-piece').forEach(p => p.classList.remove('selected'));
+        selectedPiece = null;
+    }
+
+    // (Keep your existing checkPuzzleWin and puzzleGameWon functions, they are fine)
+
+    // ==========================================
+    // INTERACTION 3: CAKE & CANDLES
+    // ==========================================
+    function initCandle() {
+        const cakeTrigger = document.getElementById('cake-trigger');
+        const flames = document.querySelectorAll('.flame');
+        const smokes = document.querySelectorAll('.smoke');
+        const journey = document.getElementById('scroll-journey');
+        const videoSec = document.getElementById('video-section');
+        const closing = document.getElementById('closing-section');
+
+        let candlesBlown = false;
+
+        cakeTrigger.addEventListener('click', () => {
+            if (candlesBlown) return;
+            candlesBlown = true;
+
+            // 1. Blow out all flames
+            flames.forEach(flame => flame.classList.add('out'));
+
+            // 2. Trigger smoke for each candle with slight random delay
+            smokes.forEach((smoke, index) => {
+                setTimeout(() => {
+                    smoke.classList.add('puff');
+                }, index * 100);
+            });
+
+            // 3. Reveal Journey after moment
+            setTimeout(() => {
+                journey.classList.remove('hidden');
+                videoSec.classList.remove('hidden');
+                closing.classList.remove('hidden');
+                journey.scrollIntoView({ behavior: 'smooth' });
+            }, 2000);
+        });
+    }
+
+    // ==========================================
+    // UTILS: CONFETTI & SNAKE
+    // ==========================================
+
+    // Snake Scroll Logic (Keep your existing one)
+    const snakePath = document.getElementById('snake-path');
+    const journeySection = document.getElementById('scroll-journey');
     const pathLength = snakePath.getTotalLength();
-    
-    // Set up initial dash properties to hide the line
     snakePath.style.strokeDasharray = pathLength;
     snakePath.style.strokeDashoffset = pathLength;
 
     window.addEventListener('scroll', () => {
-        // Calculate scroll percentage relative to the journey section
+        if(journeySection.classList.contains('hidden')) return;
+
         const sectionTop = journeySection.offsetTop;
         const sectionHeight = journeySection.offsetHeight;
         const scrollY = window.scrollY;
         const windowHeight = window.innerHeight;
 
-        // Start animating when section enters view
         if (scrollY > sectionTop - windowHeight) {
-            // Calculate how far we've scrolled into the section
             let percentage = (scrollY - (sectionTop - windowHeight / 2)) / (sectionHeight - windowHeight / 2);
-            
-            // Clamp percentage between 0 and 1
             percentage = Math.max(0, Math.min(1, percentage));
-
-            // Draw the line based on percentage
             const drawLength = pathLength * percentage;
             snakePath.style.strokeDashoffset = pathLength - drawLength;
 
-            // Fade in text blocks based on percentage
-            journeyTexts.forEach((text, index) => {
-                // Determine threshold for each text block (e.g., 0.2, 0.4, etc.)
-                const threshold = (index + 1) / (journeyTexts.length + 1);
-                if (percentage > threshold) {
-                    text.classList.add('visible');
-                }
+            document.querySelectorAll('.journey-text').forEach((text, index) => {
+                 if (percentage > (index + 1) / 5) text.classList.add('visible');
             });
         }
     });
 
-    // --- 4. Video Auto-Play & Audio Stop ---
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Stop background music
-                song1.pause();
-                song2.pause();
-                
-                // Play video
-                birthdayVideo.play();
-            }
-        });
-    }, { threshold: 0.5 }); // Trigger when 50% visible
-
-    observer.observe(videoSection);
-
-    // --- 5. Simple Confetti Logic (No external libraries) ---
-    function launchConfetti() {
+    // Confetti
+    function launchConfetti(amount = 100) {
         const canvas = document.getElementById('confetti-canvas');
+        canvas.style.display = 'block';
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
@@ -224,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const particles = [];
         const colors = ['#d4af37', '#fdfbf7', '#e0c060', '#333'];
 
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < amount; i++) {
             particles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height - canvas.height,
@@ -240,23 +278,28 @@ document.addEventListener('DOMContentLoaded', () => {
             particles.forEach((p, i) => {
                 p.y += p.speed;
                 p.x += Math.sin(p.angle) * 2;
-                p.angle += 0.1;
-
+                if (p.y > canvas.height) particles[i].y = -10;
                 ctx.fillStyle = p.color;
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                 ctx.fill();
-
-                if (p.y > canvas.height) particles[i].y = -10;
             });
-            requestAnimationFrame(draw);
+            if(canvas.style.display !== 'none') requestAnimationFrame(draw);
         }
-        
         draw();
-        
-        // Stop confetti after 5 seconds to save battery
-        setTimeout(() => {
-            canvas.style.display = 'none';
-        }, 9000);
+
+        setTimeout(() => { canvas.style.display = 'none'; }, 5000);
     }
+
+    // Video Autoplay (Keep existing)
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                song1.pause();
+                song2.pause();
+                document.getElementById('birthday-video').play();
+            }
+        });
+    }, { threshold: 0.5 });
+    observer.observe(document.getElementById('video-section'));
 });
