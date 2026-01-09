@@ -30,6 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let cardsArray = [...icons, ...icons];
     let flippedCards = [];
     let matchedPairs = 0;
+    let isBoardLocked = false;
+
 
     function initCardGame() {
         cardsArray.sort(() => 0.5 - Math.random());
@@ -49,23 +51,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function flipCard(card, icon) {
-        if (card.classList.contains('flipped') || card.classList.contains('matched')) return;
+        if (isBoardLocked || card.classList.contains('flipped') || card.classList.contains('matched')) return;
         card.classList.add('flipped');
         flippedCards.push({ card, icon });
 
         if (flippedCards.length === 2) {
+            isBoardLocked = true;
             const [first, second] = flippedCards;
             if (first.icon === second.icon) {
                 first.card.classList.add('matched');
                 second.card.classList.add('matched');
                 matchedPairs++;
                 flippedCards = [];
+                isBoardLocked = false;
                 if (matchedPairs === icons.length) cardGameWon();
             } else {
                 setTimeout(() => {
                     first.card.classList.remove('flipped');
                     second.card.classList.remove('flipped');
                     flippedCards = [];
+                    isBoardLocked = false;
                 }, 1000);
             }
         }
@@ -73,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function cardGameWon() {
         // Small confetti for small win
-        launchConfetti(50); // 50 particles
+        launchConfetti(50);
 
         // Unlock Next Section
         const puzzleSection = document.getElementById('puzzle-section');
@@ -81,71 +86,71 @@ document.addEventListener('DOMContentLoaded', () => {
 
         setTimeout(() => {
             puzzleSection.scrollIntoView({ behavior: 'smooth' });
-            initPuzzleGame(); // Initialize the puzzle now
+            initPuzzleGame();
         }, 1500);
     }
 
     // ==========================================
-    // GAME 2: PUZZLE (Smart Swap Logic)
+    // GAME 2: PUZZLE (Fixed Grid - No Moving Pieces)
     // ==========================================
-    let selectedPiece = null; // The DOM element currently selected
+    let selectedPiece = null;
 
     function initPuzzleGame() {
         const puzzleBank = document.getElementById('puzzle-source');
         const puzzleTarget = document.getElementById('puzzle-target');
 
-        // 1. Create 9 Empty Slots
+        // 1. Create 9 Empty Slots with position numbers
         puzzleTarget.innerHTML = '';
-        for(let i=0; i<9; i++) {
+        for(let i = 0; i < 9; i++) {
             const slot = document.createElement('div');
             slot.classList.add('puzzle-slot');
             slot.dataset.slotIndex = i;
-            // Clicking a slot handles moving/swapping
+            slot.dataset.position = i + 1; // For visual numbering
             slot.addEventListener('click', () => handleSlotClick(slot));
             puzzleTarget.appendChild(slot);
         }
 
-        // 2. Create 9 Pieces
+        // 2. Create 9 Pieces in FIXED GRID (no rearranging)
         puzzleBank.innerHTML = '';
-        let pieceIndices = [0,1,2,3,4,5,6,7,8];
-        pieceIndices.sort(() => 0.5 - Math.random()); // Shuffle
+        let pieceIndices = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+        pieceIndices.sort(() => 0.5 - Math.random()); // Shuffle order
 
         pieceIndices.forEach(index => {
             const piece = document.createElement('div');
             piece.classList.add('puzzle-piece');
             piece.dataset.id = index; // Correct position ID
 
-            // Visuals
+            // Visual background position
             const row = Math.floor(index / 3);
             const col = index % 3;
             piece.style.backgroundPosition = `-${col * 100}px -${row * 100}px`;
 
-            // Clicking a piece selects it
             piece.addEventListener('click', (e) => handlePieceClick(e, piece));
             puzzleBank.appendChild(piece);
         });
     }
 
     function handlePieceClick(e, piece) {
-        e.stopPropagation(); // Don't trigger slot click if piece is inside slot
+        e.stopPropagation();
 
-        // If we already have a selected piece, and we click a DIFFERENT piece
+        // If clicking same piece, deselect
+        if (selectedPiece === piece) {
+            deselectAll();
+            return;
+        }
+
+        // If we have a selected piece and click another piece, SWAP them
         if (selectedPiece && selectedPiece !== piece) {
-            // Swap the two pieces (whether in bank or board)
             swapPieces(selectedPiece, piece);
             deselectAll();
             checkPuzzleWin();
             return;
         }
 
-        // Toggle Selection
-        if (piece.classList.contains('selected')) {
-            deselectAll();
-        } else {
-            deselectAll();
-            piece.classList.add('selected');
-            selectedPiece = piece;
-        }
+        // Select this piece
+        deselectAll();
+        piece.classList.add('selected');
+        selectedPiece = piece;
     }
 
     function handleSlotClick(slot) {
@@ -169,11 +174,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function swapPieces(piece1, piece2) {
         const parent1 = piece1.parentNode;
-        const sibling1 = piece1.nextSibling === piece2 ? piece1 : piece1.nextSibling;
+        const parent2 = piece2.parentNode;
 
-        // Swap logic for DOM nodes
-        piece2.parentNode.insertBefore(piece1, piece2);
-        parent1.insertBefore(piece2, sibling1);
+        const placeholder1 = document.createElement('div');
+        const placeholder2 = document.createElement('div');
+
+        parent1.insertBefore(placeholder1, piece1);
+        parent2.insertBefore(placeholder2, piece2);
+
+        parent1.replaceChild(piece2, placeholder1);
+        parent2.replaceChild(piece1, placeholder2);
     }
 
     function deselectAll() {
@@ -181,42 +191,88 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedPiece = null;
     }
 
-    // (Keep your existing checkPuzzleWin and puzzleGameWon functions, they are fine)
+    function checkPuzzleWin() {
+        const slots = document.querySelectorAll('.puzzle-slot');
+        let correct = 0;
+
+        slots.forEach((slot, index) => {
+            if (slot.children.length > 0) {
+                const piece = slot.children[0];
+                const pieceId = parseInt(piece.dataset.id);
+                if (pieceId === index) {
+                    correct++;
+                }
+            }
+        });
+
+        // Win condition: All 9 pieces in correct positions
+        if (correct === 9) {
+            puzzleGameWon();
+        }
+    }
+
+    function puzzleGameWon() {
+        // Big confetti for puzzle win
+        launchConfetti(150);
+
+        // Show candle section after delay
+        setTimeout(() => {
+            const candleSection = document.getElementById('candle-section');
+            candleSection.classList.remove('hidden');
+            candleSection.scrollIntoView({ behavior: 'smooth' });
+            initCandle();
+        }, 2000);
+    }
 
     // ==========================================
-    // INTERACTION 3: CAKE & CANDLES
+    // INTERACTION 3: CAKE & CANDLES (Individual Tap)
     // ==========================================
     function initCandle() {
-        const cakeTrigger = document.getElementById('cake-trigger');
-        const flames = document.querySelectorAll('.flame');
-        const smokes = document.querySelectorAll('.smoke');
-        const journey = document.getElementById('scroll-journey');
-        const videoSec = document.getElementById('video-section');
-        const closing = document.getElementById('closing-section');
+        const candles = document.querySelectorAll('.candle');
+        const wishMessage = document.querySelector('.wish-message');
+        let candlesBlown = 0;
 
-        let candlesBlown = false;
+        candles.forEach(candle => {
+            candle.addEventListener('click', (e) => {
+                e.stopPropagation();
 
-        cakeTrigger.addEventListener('click', () => {
-            if (candlesBlown) return;
-            candlesBlown = true;
+                const flame = candle.querySelector('.flame');
+                const smoke = candle.querySelector('.smoke');
 
-            // 1. Blow out all flames
-            flames.forEach(flame => flame.classList.add('out'));
+                // Only blow out if not already blown
+                if (!flame.classList.contains('out')) {
+                    // Blow out flame
+                    flame.classList.add('out');
 
-            // 2. Trigger smoke for each candle with slight random delay
-            smokes.forEach((smoke, index) => {
-                setTimeout(() => {
-                    smoke.classList.add('puff');
-                }, index * 100);
+                    // Show smoke
+                    setTimeout(() => {
+                        smoke.classList.add('puff');
+                    }, 100);
+
+                    candlesBlown++;
+
+                    // When all 3 candles blown
+                    if (candlesBlown === 3) {
+                        setTimeout(() => {
+                            // Show wish message
+                            wishMessage.classList.add('show');
+
+                            // Show journey sections after message appears
+                            setTimeout(() => {
+                                const journey = document.getElementById('scroll-journey');
+                                const videoSec = document.getElementById('video-section');
+                                const closing = document.getElementById('closing-section');
+
+                                journey.classList.remove('hidden');
+                                videoSec.classList.remove('hidden');
+                                closing.classList.remove('hidden');
+
+                                journey.scrollIntoView({ behavior: 'smooth' });
+                            }, 2000);
+                        }, 500);
+                    }
+                }
             });
-
-            // 3. Reveal Journey after moment
-            setTimeout(() => {
-                journey.classList.remove('hidden');
-                videoSec.classList.remove('hidden');
-                closing.classList.remove('hidden');
-                journey.scrollIntoView({ behavior: 'smooth' });
-            }, 2000);
         });
     }
 
@@ -224,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // UTILS: CONFETTI & SNAKE
     // ==========================================
 
-    // Snake Scroll Logic (Keep your existing one)
+    // Snake Scroll Logic
     const snakePath = document.getElementById('snake-path');
     const journeySection = document.getElementById('scroll-journey');
     const pathLength = snakePath.getTotalLength();
@@ -260,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
         canvas.height = window.innerHeight;
 
         const particles = [];
-        const colors = ['#d4af37', '#fdfbf7', '#e0c060', '#333'];
+        const colors = ['#d4af37', '#fdfbf7', '#e0c060', '#c9a96e', '#a88b5f'];
 
         for (let i = 0; i < amount; i++) {
             particles.push({
@@ -291,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => { canvas.style.display = 'none'; }, 5000);
     }
 
-    // Video Autoplay (Keep existing)
+    // Video Autoplay
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
