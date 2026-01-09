@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Elements ---
     const startBtn = document.getElementById('start-btn');
     const welcomeSection = document.getElementById('welcome-section');
+    const gameSection = document.getElementById('game-section');
     const transitionMsg = document.getElementById('transition-message');
 
     // Audio
@@ -16,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         song1.onended = () => song2.play();
 
         welcomeSection.style.display = 'none';
+        gameSection.classList.remove('hidden');
         transitionMsg.classList.remove('hidden');
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -30,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let cardsArray = [...icons, ...icons];
     let flippedCards = [];
     let matchedPairs = 0;
+    let isBoardLocked = false;
 
     function initCardGame() {
         cardsArray.sort(() => 0.5 - Math.random());
@@ -49,23 +52,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function flipCard(card, icon) {
-        if (card.classList.contains('flipped') || card.classList.contains('matched')) return;
+        if (isBoardLocked || card.classList.contains('flipped') || card.classList.contains('matched')) return;
         card.classList.add('flipped');
         flippedCards.push({ card, icon });
 
         if (flippedCards.length === 2) {
+            isBoardLocked = true;
             const [first, second] = flippedCards;
             if (first.icon === second.icon) {
                 first.card.classList.add('matched');
                 second.card.classList.add('matched');
                 matchedPairs++;
                 flippedCards = [];
+                isBoardLocked = false;
                 if (matchedPairs === icons.length) cardGameWon();
             } else {
                 setTimeout(() => {
                     first.card.classList.remove('flipped');
                     second.card.classList.remove('flipped');
                     flippedCards = [];
+                    isBoardLocked = false;
                 }, 1000);
             }
         }
