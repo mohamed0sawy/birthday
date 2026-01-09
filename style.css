@@ -68,6 +68,8 @@ h1, h2, h3 {
     margin-bottom: 30px;
 }
 
+
+
 #start-btn:active {
     transform: scale(0.95);
 }
@@ -113,9 +115,12 @@ h1, h2, h3 {
     width: 100%;
 }
 
+
+
 .card {
     aspect-ratio: 1;
     background: linear-gradient(135deg, #d4c4ab 0%, #bfac8f 100%);
+    /* border: 1px groove #dcd5b0; */
     border-radius: 4px;
     display: flex;
     justify-content: center;
@@ -136,7 +141,7 @@ h1, h2, h3 {
 
 .card.flipped .card-content, .card.matched .card-content {
     display: block;
-    transform: rotateY(180deg);
+    transform: rotateY(180deg); /* Text needs to be readable */
 }
 
 #game-message {
@@ -152,7 +157,7 @@ h1, h2, h3 {
 /* --- Section 4: Scroll Journey (Snake) --- */
 #scroll-journey {
     position: relative;
-    height: 1500px;
+    height: 1500px; /* Long section for scrolling */
     overflow: hidden;
     margin-top: 50px;
 }
@@ -178,9 +183,9 @@ h1, h2, h3 {
     left: 10%;
     text-align: center;
     font-size: 1.5rem;
-    background-color: var(--bg-color);
+    background-color: var(--bg-color); /* Mask the line behind text */
     padding: 10px;
-    opacity: 0;
+    opacity: 0; /* Hidden initially */
     transform: translateY(20px);
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     z-index: 1;
@@ -245,32 +250,35 @@ video {
     left: 0;
     width: 100%;
     height: 100vh;
-    background-color: rgba(253, 251, 247, 0.95);
+    background-color: rgba(253, 251, 247, 0.95); /* High opacity background */
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100;
+    z-index: 100; /* Below confetti (999) but above everything else */
     animation: fadeIn 0.5s ease;
 }
 
 .celebration-content {
     text-align: center;
-    animation: popUp 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    animation: popUp 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Bouncy effect */
     padding: 20px;
 }
 
 .celebration-content h3 {
-    font-size: 3.5rem;
+    font-size: 3.5rem; /* Much bigger */
     color: var(--accent-color);
     margin-bottom: 30px;
     text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
 }
+
+
 
 #continue-btn:hover {
     background-color: transparent;
     color: var(--text-color);
 }
 
+/* Pop Up Animation Keyframes */
 @keyframes popUp {
     0% { transform: scale(0.5); opacity: 0; }
     100% { transform: scale(1); opacity: 1; }
@@ -295,101 +303,74 @@ video {
 }
 
 #snake-path {
-    stroke: var(--text-color);
+    stroke: var(--text-color); /* Matches your new text color */
     stroke-width: 2;
     fill: none;
-    opacity: 0.2;
+    opacity: 0.2; /* Makes it look like a subtle watermark path */
 }
 
 #arrow-head {
     fill: var(--text-color);
 }
 
-/* ==================== UPGRADED PUZZLE STYLES ==================== */
+/* --- UPGRADED PUZZLE STYLES --- */
 #puzzle-section {
-    padding: 40px 20px;
+    padding: 20px;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background-color: transparent; /* Blends with main gradient */
 }
 
-.instruction {
-    font-size: 1rem;
-    color: var(--accent-color);
-    margin-bottom: 30px;
-    opacity: 0.9;
-}
-
-/* Target Board - Where pieces go */
 .puzzle-board {
-    width: 330px;
-    height: 330px;
+    width: 320px; /* Slightly larger frame */
+    height: 320px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 3px;
-    padding: 15px;
-    background: linear-gradient(145deg, #fff 0%, #f8f5f0 100%);
-    border: 6px solid var(--accent-color);
-    box-shadow:
-        0 8px 16px rgba(61, 48, 36, 0.15),
-        inset 0 2px 4px rgba(255, 255, 255, 0.8);
-    margin-bottom: 40px;
-    border-radius: 8px;
-    position: relative;
-}
-
-.puzzle-board::before {
-    content: '';
-    position: absolute;
-    top: -12px;
-    left: -12px;
-    right: -12px;
-    bottom: -12px;
-    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
-    border-radius: 12px;
-    z-index: -1;
+    gap: 2px;
+    /* Elegant Frame */
+    padding: 10px;
+    background: #fff;
+    border: 8px solid var(--text-color);
+    box-shadow: 0 15px 35px rgba(61, 48, 36, 0.3);
+    margin-bottom: 30px;
+    border-radius: 4px;
 }
 
 .puzzle-slot {
     width: 100px;
     height: 100px;
-    background: linear-gradient(135deg, #f5f0e8 0%, #ede7db 100%);
-    border: 2px dashed rgba(140, 123, 108, 0.25);
+    background-color: #f0e6d2; /* Warm beige instead of gray */
+    border: 1px dashed rgba(140, 123, 108, 0.3);
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
-    border-radius: 4px;
-    transition: all 0.3s ease;
 }
 
-.puzzle-slot:hover {
-    background: linear-gradient(135deg, #fff 0%, #f5f0e8 100%);
-    border-color: rgba(140, 123, 108, 0.4);
-}
-
-.puzzle-slot::after {
-    content: attr(data-position);
+/* Guide numbers inside slots (Optional, helps visual) */
+.puzzle-slot::before {
+    content: '';
     position: absolute;
-    font-size: 3rem;
-    color: rgba(140, 123, 108, 0.08);
-    font-weight: bold;
-    pointer-events: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(140, 123, 108, 0.2);
 }
 
-/* Piece Bank - Source area */
 .puzzle-bank {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    max-width: 330px;
-    padding: 20px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.3) 100%);
-    border: 2px solid rgba(140, 123, 108, 0.2);
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    max-width: 340px;
+    min-height: 120px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 15px;
 }
 
 .puzzle-piece {
@@ -398,283 +379,148 @@ video {
     background-image: url('img/puzzle.jpg');
     background-size: 300px 300px;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    transition: transform 0.2s ease, box-shadow 0.3s ease;
-    border-radius: 4px;
-    border: 2px solid rgba(255, 255, 255, 0.8);
-}
-
-.puzzle-piece:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 2px;
 }
 
 .puzzle-piece.selected {
-    border: 3px solid #d4af37;
-    transform: scale(1.08);
-    box-shadow:
-        0 0 0 4px rgba(212, 175, 55, 0.2),
-        0 8px 20px rgba(212, 175, 55, 0.4);
-    z-index: 10;
+    border: 3px solid #d4af37; /* Gold Highlight */
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+    z-index: 100;
 }
 
-/* ==================== UPGRADED CANDLE & CAKE STYLES ==================== */
+/* --- UPGRADED CAKE & CANDLE STYLES --- */
 #candle-section {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px 20px;
 }
 
 .cake-container {
     position: relative;
-    margin-top: 30px;
-    transform: scale(1.1);
+    margin-top: 50px;
+    cursor: pointer;
+    transform: scale(1.2); /* Make it nice and big */
 }
 
 /* The Cake Base */
 .cake {
-    width: 220px;
-    height: 120px;
-    background: linear-gradient(180deg, #f9e5c8 0%, #f0d4a8 100%);
+    width: 200px;
+    height: 100px;
+    background: #f8e8d0; /* Sponge color */
     position: relative;
-    border-radius: 15px 15px 8px 8px;
-    box-shadow:
-        0 6px 0 #d9bd8f,
-        0 12px 0 #c9ad7f,
-        0 20px 30px rgba(61, 48, 36, 0.2);
+    border-radius: 10px 10px 5px 5px;
+    box-shadow: 0 5px 0 #e0cdae, 0 15px 20px rgba(0,0,0,0.1);
 }
 
-.cake::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    height: 8px;
-    background: #d9bd8f;
-    border-radius: 0 0 6px 6px;
-}
-
-/* Elegant Icing */
+/* Pink Icing */
 .icing {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 45px;
-    background: linear-gradient(180deg, #f4d5d8 0%, #efc0c3 100%);
-    border-radius: 15px 15px 0 0;
-    box-shadow: inset 0 -2px 4px rgba(255, 255, 255, 0.5);
+    height: 40px;
+    background: #eebcbd; /* Soft Pink */
+    border-radius: 10px 10px 0 0;
 }
 
-/* Elegant Icing Drips */
-.icing::before {
+/* Drips of Icing */
+.icing::before, .icing::after {
     content: '';
     position: absolute;
-    bottom: -15px;
-    left: 15%;
-    width: 35px;
-    height: 20px;
-    background: linear-gradient(180deg, #efc0c3 0%, #f4d5d8 100%);
-    border-radius: 0 0 50% 50%;
+    background: #eebcbd;
+    border-radius: 0 0 20px 20px;
 }
-
-.icing::after {
-    content: '';
-    position: absolute;
-    bottom: -18px;
-    right: 20%;
-    width: 40px;
-    height: 23px;
-    background: linear-gradient(180deg, #efc0c3 0%, #f4d5d8 100%);
-    border-radius: 0 0 50% 50%;
-}
-
-/* Additional drip */
-.cake::after {
-    content: '';
-    position: absolute;
-    top: 45px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 30px;
-    height: 18px;
-    background: linear-gradient(180deg, #efc0c3 0%, #f4d5d8 100%);
-    border-radius: 0 0 50% 50%;
-}
+.icing::before { width: 40px; height: 20px; top: 40px; left: 20px; box-shadow: 50px 5px 0 #eebcbd; }
+.icing::after { width: 30px; height: 30px; top: 40px; right: 40px; }
 
 /* The Plate */
 .plate {
-    width: 280px;
-    height: 12px;
-    background: linear-gradient(180deg, #fff 0%, #f5f5f5 100%);
-    border-radius: 50%;
+    width: 260px;
+    height: 10px;
+    background: #fff;
+    border-radius: 10px;
     margin-left: -30px;
-    margin-top: 8px;
-    box-shadow:
-        0 2px 0 rgba(0, 0, 0, 0.05),
-        0 8px 20px rgba(0, 0, 0, 0.1);
-    border: 2px solid rgba(140, 123, 108, 0.1);
+    margin-top: 5px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
 }
 
 /* Candles Layout */
 .candles {
     position: absolute;
-    top: -55px;
+    top: -40px;
     width: 100%;
     display: flex;
-    justify-content: center;
-    gap: 40px;
+    justify-content: space-evenly;
     padding: 0 20px;
 }
 
 .candle {
-    width: 14px;
-    height: 60px;
-    background: linear-gradient(90deg,
-        #fff 0%, #fff 20%,
-        #d4af37 20%, #d4af37 40%,
-        #fff 40%, #fff 60%,
-        #d4af37 60%, #d4af37 80%,
-        #fff 80%, #fff 100%
-    );
+    width: 12px;
+    height: 50px;
+    background: repeating-linear-gradient(45deg, #fff, #fff 5px, #d4af37 5px, #d4af37 10px); /* Gold striped */
     position: relative;
-    border-radius: 3px;
-    box-shadow:
-        inset 0 2px 4px rgba(255, 255, 255, 0.8),
-        0 4px 8px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}
-
-.candle:hover {
-    transform: scale(1.05);
-}
-
-.candle::before {
-    content: '';
-    position: absolute;
-    top: -3px;
-    left: 0;
-    right: 0;
-    height: 6px;
-    background: linear-gradient(180deg, #d4af37 0%, transparent 100%);
-    border-radius: 3px 3px 0 0;
+    border-radius: 2px;
 }
 
 /* Realistic Flame */
 .flame {
     position: absolute;
-    top: -32px;
+    top: -25px;
     left: 50%;
     transform: translateX(-50%);
-    width: 16px;
-    height: 28px;
-    background: radial-gradient(ellipse at center bottom,
-        #fff700 0%,
-        #ffeb3b 15%,
-        #ffc107 30%,
-        #ff9800 60%,
-        #ff5722 100%);
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    animation: flicker 0.2s infinite alternate;
-    opacity: 1;
-    box-shadow:
-        0 0 20px rgba(255, 183, 77, 0.8),
-        0 0 40px rgba(255, 152, 0, 0.6),
-        0 0 60px rgba(255, 87, 34, 0.4);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.flame::before {
-    content: '';
-    position: absolute;
-    top: 3px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 8px;
-    height: 12px;
-    background: radial-gradient(ellipse at center, #fff 0%, #ffeb3b 100%);
-    border-radius: 50%;
+    width: 14px;
+    height: 25px;
+    background: radial-gradient(ellipse at bottom, #ffff00 0%, #ff6a00 100%);
+    border-radius: 50% 50% 20% 20%;
+    animation: flicker 0.15s infinite alternate;
+    opacity: 0.9;
+    box-shadow: 0 0 20px #ff6a00;
+    transition: opacity 0.5s;
 }
 
 .wick {
     width: 2px;
-    height: 8px;
-    background: linear-gradient(180deg, #333 0%, #666 100%);
+    height: 6px;
+    background: #333;
     position: absolute;
-    top: -8px;
+    top: -6px;
     left: 50%;
     transform: translateX(-50%);
-    border-radius: 1px;
 }
 
 /* Smoke Effect */
 .smoke {
     position: absolute;
-    top: -35px;
+    top: -30px;
     left: 50%;
     transform: translateX(-50%);
-    width: 6px;
-    height: 6px;
-    background: radial-gradient(circle, rgba(120, 120, 120, 0.7) 0%, rgba(150, 150, 150, 0.4) 100%);
+    width: 8px;
+    height: 8px;
+    background: rgba(150, 150, 150, 0.6);
     border-radius: 50%;
-    opacity: 0;
+    opacity: 0; /* Hidden */
 }
 
 /* Animations */
 @keyframes flicker {
-    0% {
-        transform: translateX(-50%) scaleY(1) scaleX(1);
-        filter: brightness(1);
-    }
-    100% {
-        transform: translateX(-50%) scaleY(1.08) scaleX(0.95) rotate(1deg);
-        filter: brightness(1.1);
-    }
+    0% { transform: translateX(-50%) scale(1); }
+    100% { transform: translateX(-50%) scale(1.1) rotate(2deg); }
 }
 
 .flame.out {
     opacity: 0;
-    transform: translateX(-50%) scaleY(0.1);
 }
 
 .smoke.puff {
-    animation: smokeRise 2s ease-out forwards;
+    animation: smokeRise 1.5s ease-out forwards;
 }
 
 @keyframes smokeRise {
-    0% {
-        opacity: 0.7;
-        transform: translateX(-50%) translateY(0) scale(1);
-    }
-    50% {
-        opacity: 0.5;
-        transform: translateX(-45%) translateY(-30px) scale(2);
-    }
-    100% {
-        opacity: 0;
-        transform: translateX(-40%) translateY(-70px) scale(3.5);
-    }
-}
-
-/* Wish Message */
-.wish-message {
-    margin-top: 50px;
-    font-size: 1.8rem;
-    color: var(--accent-color);
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 1s ease, transform 1s ease;
-    font-family: var(--font-heading);
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.wish-message.show {
-    opacity: 1;
-    transform: translateY(0);
+    0% { opacity: 0.8; transform: translateX(-50%) translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateX(-60%) translateY(-50px) scale(3); }
 }
