@@ -325,15 +325,15 @@ video {
 }
 
 .puzzle-board {
-    width: 320px; /* Slightly larger frame */
-    height: 320px;
+    min-width: 200px; /* Slightly larger frame */
+    min-height: 200px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
+    gap: 0px;
     /* Elegant Frame */
-    padding: 10px;
+    /*padding: 10px;*/
     background: #fff;
-    border: 8px solid var(--text-color);
+    border: 4px solid var(--text-color);
     box-shadow: 0 15px 35px rgba(61, 48, 36, 0.3);
     margin-bottom: 30px;
     border-radius: 4px;
@@ -360,12 +360,16 @@ video {
     background-color: rgba(140, 123, 108, 0.2);
 }
 
+.puzzle-slot.filled {
+    border: none;
+}
+
 .puzzle-bank {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 8px;
-    max-width: 340px;
+    max-width: 350px;
     min-height: 120px;
     padding: 15px;
     background: rgba(255, 255, 255, 0.4);
@@ -402,7 +406,7 @@ video {
 
 .cake-container {
     position: relative;
-    margin-top: 50px;
+    margin-top: 18%;
     cursor: pointer;
     transform: scale(1.2); /* Make it nice and big */
 }

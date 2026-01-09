@@ -91,6 +91,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1500);
     }
 
+//==============================================================================================================
+    // Unlock Next Section
+            const puzzleSection = document.getElementById('puzzle-section');
+            puzzleSection.classList.remove('hidden');
+            setTimeout(() => {
+                        puzzleSection.scrollIntoView({ behavior: 'smooth' });
+                        initPuzzleGame(); // Initialize the puzzle now
+                    }, 1500);
+//==================================================================================================================
+
     // ==========================================
     // GAME 2: PUZZLE (Smart Swap Logic)
     // ==========================================
@@ -139,6 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (selectedPiece && selectedPiece !== piece) {
             // Swap the two pieces (whether in bank or board)
             swapPieces(selectedPiece, piece);
+            updateAllSlots();
             deselectAll();
             checkPuzzleWin();
             return;
@@ -155,23 +166,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleSlotClick(slot) {
-        // Only act if we have a selected piece
         if (!selectedPiece) return;
 
-        // Case 1: Slot is empty -> Move piece there
+        // If slot is empty → move piece
         if (slot.children.length === 0) {
             slot.appendChild(selectedPiece);
+
+            updateSlotState(slot);
+            updateAllSlots();
+
             deselectAll();
             checkPuzzleWin();
         }
-        // Case 2: Slot has a piece -> Swap selected with slot's piece
+        // If slot has a piece → swap
         else {
             const pieceInSlot = slot.children[0];
             swapPieces(selectedPiece, pieceInSlot);
+
+            updateAllSlots();
+
             deselectAll();
             checkPuzzleWin();
         }
     }
+
 
     function swapPieces(piece1, piece2) {
         const parent1 = piece1.parentNode;
@@ -187,7 +205,56 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedPiece = null;
     }
 
-    // (Keep your existing checkPuzzleWin and puzzleGameWon functions, they are fine)
+    function updateSlotState(slot) {
+        if (slot.children.length > 0) {
+            slot.classList.add("filled");
+        } else {
+            slot.classList.remove("filled");
+        }
+    }
+
+    function updateAllSlots() {
+        document.querySelectorAll(".puzzle-slot").forEach(updateSlotState);
+    }
+
+
+    function checkPuzzleWin() {
+        const slots = document.querySelectorAll('.puzzle-slot');
+        let correctCount = 0;
+
+        slots.forEach(slot => {
+            if (slot.children.length > 0) {
+                const pieceIndex = parseInt(slot.children[0].dataset.id);
+                const slotIndex = parseInt(slot.dataset.slotIndex);
+                if (pieceIndex === slotIndex) correctCount++;
+            }
+        });
+
+        if (correctCount === 9) {
+            puzzleGameWon();
+        }
+    }
+
+    function puzzleGameWon() {
+        // Show Big Popup
+        const popup = document.getElementById('game-message');
+        popup.classList.remove('hidden');
+        launchConfetti(150); // Big Confetti
+
+        // Handle "Continue" Button
+        document.getElementById('continue-btn').onclick = function() {
+            popup.style.opacity = '0';
+            setTimeout(() => {
+                popup.classList.add('hidden');
+
+                // Unlock Candle Section
+                const candleSection = document.getElementById('candle-section');
+                candleSection.classList.remove('hidden');
+                candleSection.scrollIntoView({ behavior: 'smooth' });
+                initCandle();
+            }, 500);
+        };
+    }
 
     // ==========================================
     // INTERACTION 3: CAKE & CANDLES
