@@ -91,16 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1500);
     }
 
-//==============================================================================================================
-    // Unlock Next Section
-            const puzzleSection = document.getElementById('puzzle-section');
-            puzzleSection.classList.remove('hidden');
-            setTimeout(() => {
-                        puzzleSection.scrollIntoView({ behavior: 'smooth' });
-                        initPuzzleGame(); // Initialize the puzzle now
-                    }, 1500);
-//==================================================================================================================
-
     // ==========================================
     // GAME 2: PUZZLE (Smart Swap Logic)
     // ==========================================
@@ -260,36 +250,46 @@ document.addEventListener('DOMContentLoaded', () => {
     // INTERACTION 3: CAKE & CANDLES
     // ==========================================
     function initCandle() {
-        const cakeTrigger = document.getElementById('cake-trigger');
-        const flames = document.querySelectorAll('.flame');
-        const smokes = document.querySelectorAll('.smoke');
+        const candles = document.querySelectorAll('.candle');
         const journey = document.getElementById('scroll-journey');
         const videoSec = document.getElementById('video-section');
         const closing = document.getElementById('closing-section');
 
-        let candlesBlown = false;
+        let blownCount = 0; // Track how many are out
 
-        cakeTrigger.addEventListener('click', () => {
-            if (candlesBlown) return;
-            candlesBlown = true;
+        candles.forEach(candle => {
+            candle.addEventListener('click', (e) => {
+                e.stopPropagation(); // Stop click from bubbling up
 
-            // 1. Blow out all flames
-            flames.forEach(flame => flame.classList.add('out'));
+                const flame = candle.querySelector('.flame');
+                const smoke = candle.querySelector('.smoke');
 
-            // 2. Trigger smoke for each candle with slight random delay
-            smokes.forEach((smoke, index) => {
-                setTimeout(() => {
-                    smoke.classList.add('puff');
-                }, index * 100);
+                // If already out, do nothing
+                if (flame.classList.contains('out')) return;
+
+                // 1. Blow out THIS specific candle
+                flame.classList.add('out');
+
+                // 2. Trigger smoke for THIS specific candle
+                // Reset animation in case she clicks fast
+                smoke.classList.remove('puff');
+                void smoke.offsetWidth; // Trigger reflow
+                smoke.classList.add('puff');
+
+                // 3. Increment counter
+                blownCount++;
+
+                // 4. Check if ALL 3 are out
+                if (blownCount === 3) {
+                    // Wait a moment after the last candle, then reveal the journey
+                    setTimeout(() => {
+                        journey.classList.remove('hidden');
+                        videoSec.classList.remove('hidden');
+                        closing.classList.remove('hidden');
+                        journey.scrollIntoView({ behavior: 'smooth' });
+                    }, 2000);
+                }
             });
-
-            // 3. Reveal Journey after moment
-            setTimeout(() => {
-                journey.classList.remove('hidden');
-                videoSec.classList.remove('hidden');
-                closing.classList.remove('hidden');
-                journey.scrollIntoView({ behavior: 'smooth' });
-            }, 2000);
         });
     }
 
