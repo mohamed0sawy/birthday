@@ -340,8 +340,8 @@ video {
 }
 
 .puzzle-slot {
-    width: 100px;
-    height: 100px;
+    width: 95px;
+    height: 95px;
     background-color: #f0e6d2; /* Warm beige instead of gray */
     border: 1px dashed rgba(140, 123, 108, 0.3);
     display: flex;
@@ -371,15 +371,15 @@ video {
     gap: 8px;
     max-width: 350px;
     min-height: 120px;
-    padding: 15px;
+    padding: 2px;
     background: rgba(255, 255, 255, 0.4);
     border: 2px solid rgba(255, 255, 255, 0.6);
     border-radius: 15px;
 }
 
 .puzzle-piece {
-    width: 100px;
-    height: 100px;
+    width: 95px;
+    height: 95px;
     background-image: url('img/puzzle.jpg');
     background-size: 300px 300px;
     cursor: pointer;
@@ -406,9 +406,9 @@ video {
 
 .cake-container {
     position: relative;
-    margin-top: 12%;
+    margin-top: 47%;
     cursor: pointer;
-    transform: scale(1.2); /* Make it nice and big */
+    transform: scale(1); /* Make it nice and big */
 }
 
 /* The Cake Base */
