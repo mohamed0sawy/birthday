@@ -157,7 +157,7 @@ h1, h2, h3 {
 /* --- Section 4: Scroll Journey (Snake) --- */
 #scroll-journey {
     position: relative;
-    height: 1500px; /* Long section for scrolling */
+    height: 1700px; /* Long section for scrolling */
     overflow: hidden;
     margin-top: 50px;
 }

@@ -318,8 +318,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const drawLength = pathLength * percentage;
             snakePath.style.strokeDashoffset = pathLength - drawLength;
 
-            document.querySelectorAll('.journey-text').forEach((text, index) => {
-                 if (percentage > (index + 1) / 5) text.classList.add('visible');
+            const texts = document.querySelectorAll('.journey-text');
+            const step = 1 / texts.length;
+
+            texts.forEach((text, index) => {
+                if (percentage >= step * (index + 1)) {
+                    text.classList.add('visible');
+                }
             });
         }
     });
