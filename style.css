@@ -57,7 +57,7 @@ h1, h2, h3 {
 }
 
 .title {
-    font-size: 3rem;
+    font-size: 2.5rem;
     margin-bottom: 20px;
     line-height: 1.2;
 }
@@ -104,7 +104,7 @@ h1, h2, h3 {
 
 .section-title {
     margin-bottom: 30px;
-    font-size: 2rem;
+    font-size: 1.7rem;
 }
 
 .game-container {
@@ -291,7 +291,7 @@ video {
 
 #start-btn, #continue-btn {
     padding: 15px 40px;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     background: linear-gradient(135deg, #c9a96e 0%, #a88b5f 100%);
     border: none;
     box-shadow: 0 8px 20px rgba(139, 111, 71, 0.3);
