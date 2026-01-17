@@ -325,29 +325,39 @@ video {
 }
 
 .puzzle-board {
-    min-width: 200px; /* Slightly larger frame */
-    min-height: 200px;
+    /* FORCE EXACT SIZE */
+    width: 300px !important;
+    height: 300px !important;
+
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0px;
-    /* Elegant Frame */
-    /*padding: 10px;*/
+    /* Use exactly 100px columns, not 1fr */
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 0; /* Crucial: No gaps between pieces */
+
+    /* Frame Styling */
+    padding: 0;
     background: #fff;
-    border: 4px solid var(--text-color);
+    border: 4px solid var(--text-color); /* Thicker frame looks better */
     box-shadow: 0 15px 35px rgba(61, 48, 36, 0.3);
     margin-bottom: 30px;
-    border-radius: 4px;
+
+    /* Ensure border doesn't shrink the 300px content area */
+    box-sizing: content-box;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .puzzle-slot {
-    width: 95px;
-    height: 95px;
-    background-color: #f0e6d2; /* Warm beige instead of gray */
-    border: 1px dashed rgba(140, 123, 108, 0.3);
+    width: 100px;
+    height: 100px;
+    background-color: #f0e6d2;
+    border: 0.5px dashed rgba(140, 123, 108, 0.3); /* Thin guides */
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
+    box-sizing: border-box;
 }
 
 /* Guide numbers inside slots (Optional, helps visual) */
@@ -378,21 +388,22 @@ video {
 }
 
 .puzzle-piece {
-    width: 95px;
-    height: 95px;
-    background-image: url('img/puzzle.jpg');
+    width: 100px;
+    height: 100px;
+    background-image: url('img/puzzle.png');
+
+    /* IMPORTANT: This must match the total board size (3cols * 100px) */
     background-size: 300px 300px;
+
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
-    border-radius: 2px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2); /* Subtle inner highlight */
+    transition: transform 0.2s;
 }
 
 .puzzle-piece.selected {
-    border: 3px solid #d4af37; /* Gold Highlight */
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+    border: 2px solid #d4af37;
     z-index: 100;
+    transform: scale(0.95); /* Shrink slightly so we can see the border */
 }
 
 /* --- UPGRADED CAKE & CANDLE STYLES --- */
